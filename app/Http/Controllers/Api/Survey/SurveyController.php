@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Survey;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSurveyRequest;
+use App\Models\Question;
 use App\Models\Survey;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -73,6 +74,13 @@ class SurveyController extends Controller
       return Response::json($survey, 200);
     }
     return Response::json(['message' => 'the survey not exist'], 404);
+  }
+
+  public function show_survey_question($survey_id)
+  {
+    $questions = Question::where('survey_id' , $survey_id)->get();
+     dd($questions);
+    
   }
 
   public function updateSurveyRule()

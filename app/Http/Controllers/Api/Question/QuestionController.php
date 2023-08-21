@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Question;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreQuestionRequest;
 use App\Models\Question;
+use App\Models\QuestionsDetails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\DB;
@@ -26,26 +27,32 @@ class QuestionController extends Controller
      */
     public function store(StoreQuestionRequest $request)
     {
-      
         $questionsData = $request->input('questions');
-      //  return  $questionsData;
+        //dd($questionsData);
         $data = [];
-           
-            DB::beginTransaction();
-            foreach ($questionsData as $questionData) {
-                $randomString = md5(rand());
-                $question_serial = substr($randomString, 0, 10) . now();
-                $questionData['question_serial'] =  $question_serial;
-               $question =  Question::create($questionData);
-               $data[] = $question;
+        DB::beginTransaction();
+        foreach ($questionsData as $questionData) {
+            $randomString = md5(rand());
+            $question_serial = substr($randomString, 0, 10) . now();
+            $questionData['question_serial'] =  $question_serial;
+            $question =  Question::create($questionData);
+            foreach($questionData['details'] as $detail){
+              $newDetail = QuestionsDetails::create([
+                   'question_id' => $question->id , 
+                   'answer_serial' => 'indexserialcndj' ,
+                   'answer_option' => $detail['answer_option']
+              ]);
             }
-            DB::commit();
-            return Response::json($data , 201);
-   
-            return Response::json(['error' => 'failed to insert questions'] , 500);
-        
-           // return Response::json(['error' => 'failed to insert questions'] , 500);
-        
+            $data[] = $question;
+            //details
+        }
+        DB::commit();
+        return Response::json($data, 201);
+
+       // return Response::json(['error' => 'failed to insert questions'], 500);
+
+        // return Response::json(['error' => 'failed to insert questions'] , 500);
+
     }
 
     /**

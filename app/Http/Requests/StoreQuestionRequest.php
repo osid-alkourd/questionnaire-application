@@ -15,14 +15,15 @@ class StoreQuestionRequest extends FormRequest
     
     public function rules()
     {
-    //    dd(request()->all());
+    //dd(request()->all());
         return [
-           'questions' => 'required|array',
+          //  'questions' => 'required|array',
             'questions.*.survey_id' => 'required|exists:surveys,id',
             'questions.*.title' => 'required|string|max:20|min:5',
             'questions.*.question_type' => 'required|numeric|between:1,5',
             'questions.*.question_notes' => 'required|string|max:150|min:5',
-            'questions.*.answer_option' => 'numeric|between:1,2'
+            'questions.*.answer_option' => 'numeric|between:1,2' , 
+            'questions.*.details'
             
         ];
     }

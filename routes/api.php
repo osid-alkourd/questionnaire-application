@@ -49,7 +49,7 @@ Route::group([
 
 // surveys
 Route::apiResource('surveys', SurveyController::class)->middleware('auth:user');
-
+Route::get('surveys/{id}/showQuestions' , [SurveyController::class , 'show_survey_question'])->middleware('auth:user');
 // questions
 Route::apiResource('questions', QuestionController::class)->middleware('auth:user');
 
