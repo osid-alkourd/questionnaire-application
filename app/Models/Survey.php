@@ -9,4 +9,9 @@ class Survey extends Model
 {
     use HasFactory;
     protected $fillable = ['survey_caption' , 'status' , 'created_by' , 'expire_at'];
+
+    public function questions()
+    {
+      return $this->hasMany(Question::class);
+    }
 }

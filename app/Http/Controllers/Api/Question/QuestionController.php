@@ -35,13 +35,16 @@ class QuestionController extends Controller
             $randomString = md5(rand());
             $question_serial = substr($randomString, 0, 10) . now();
             $questionData['question_serial'] =  $question_serial;
+           // dd($questionData);
             $question =  Question::create($questionData);
-            foreach($questionData['details'] as $detail){
-              $newDetail = QuestionsDetails::create([
-                   'question_id' => $question->id , 
-                   'answer_serial' => 'indexserialcndj' ,
-                   'answer_option' => $detail['answer_option']
-              ]);
+            if ($question->question_type != 1 && $question->question_type != 5) {
+                foreach ($questionData['details'] as $detail) {
+                    $newDetail = QuestionsDetails::create([
+                        'question_id' => $question->id,
+                        'answer_serial' => 'indexserialcndj',
+                        'answer_option' => $detail['answer_option']
+                    ]);
+                }
             }
             $data[] = $question;
             //details
@@ -49,7 +52,7 @@ class QuestionController extends Controller
         DB::commit();
         return Response::json($data, 201);
 
-       // return Response::json(['error' => 'failed to insert questions'], 500);
+        // return Response::json(['error' => 'failed to insert questions'], 500);
 
         // return Response::json(['error' => 'failed to insert questions'] , 500);
 
@@ -81,6 +84,8 @@ class QuestionController extends Controller
         }
         return Response::json(['error' => ' the question not found'], 404);
     }
+
+    
 
 
     public function destroy($id)
